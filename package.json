@@ -1,0 +1,33 @@
+{
+  "name": "pack-server",
+  "version": "0.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=local DEBUG=demo node --harmony app.js",
+    "test": "mocha --harmony"
+  },
+  "dependencies": {
+    "co": "~4.6.0",
+    "co-urllib": "~0.2.3",
+    "cross-env": "^2.0.1",
+    "debug": "~2.0.0",
+    "koa": "^1.2.4",
+    "koa-bodyparser": "~2.2.0",
+    "koa-compress": "~1.0.9",
+    "koa-onerror": "~1.3.1",
+    "koa-router": "~5.4.0",
+    "koa-session": "~3.3.1",
+    "koa-static-cache": "~3.1.7",
+    "koa-validator": "~0.6.4",
+    "lru-cache": "~4.0.1",
+    "mini-logger": "~1.1.0",
+    "underscore": "~1.8.3",
+    "xtemplate": "~4.5.1",
+    "xtpl": "~3.2.0"
+  },
+  "devDependencies": {
+    "supertest": "^0.12.1",
+    "mocha": "^1.18.2",
+    "should": "3.3.2"
+  }
+}
