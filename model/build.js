@@ -20,11 +20,12 @@ class build {
   runTask(task) {
     let self = this;
     console.log("runTask");
+    shell.exec('npm install',{async:false});
     let config = require('../mods/' + task.mod + '/webpack.config.js');
-    self.build(config);
+    self.build(config,task);
   }
 
-  build(config) {
+  build(config,task) {
     const self = this;
     webpack(config, function() {
       self.io.to(task.id).emit('chat message', task.mod);
