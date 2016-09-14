@@ -9,7 +9,8 @@ class initCode{
     }
     shell.mkdir(data.user);
     shell.cd(data.user);
-    shell.exec('git clone ' + url)
+    shell.exec('git clone ' + url);
+    shell.cd('../../');
 
   }
 }
