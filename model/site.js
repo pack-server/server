@@ -3,7 +3,8 @@ const build = require('./build.js');
 
 class initCode {
   getCode(data) {
-    console.log(data)
+    shell.mkdir('github');
+    shell.cd('github')
     shell.cd('mods');
     let url = '';
     if (data.site == 'github') {
@@ -17,7 +18,7 @@ class initCode {
       shell.exec(`git branch remotes/origin/${data.branch}`);
       shell.exec(`git checkout -b ${data.branch}`);
     }
-    shell.cd('../../');
+    shell.cd('../../../');
 
   }
 }
