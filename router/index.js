@@ -4,6 +4,7 @@ module.exports = function(){
     //首页
     router.get('/',controller.index);
     router.get('/build',controller.build);
-    router.get('/:site/:user/:pname',controller.site);
+    router.get('/cloud/:site/:user/:pname',controller.site);
+    router.get('/cloud/:site/:user/:pname/:branch',controller.site);
     return router;
 };

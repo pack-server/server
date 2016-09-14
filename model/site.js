@@ -1,6 +1,8 @@
 const shell = require('shelljs');
-class initCode{
-  getCode(data){
+const build = require('./build.js');
+
+class initCode {
+  getCode(data) {
     console.log(data)
     shell.cd('mods');
     let url = '';
@@ -10,6 +12,11 @@ class initCode{
     shell.mkdir(data.user);
     shell.cd(data.user);
     shell.exec('git clone ' + url);
+    console.log(data)
+    if (data.branch) {
+      shell.exec(`git branch remotes/origin/${data.branch}`);
+      shell.exec(`git checkout -b ${data.branch}`);
+    }
     shell.cd('../../');
 
   }
