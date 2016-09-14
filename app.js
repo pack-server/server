@@ -1,20 +1,25 @@
-var debug = require('debug')('demo');
-var koa = require('koa');
-//配置文件
-var config = require('./config/config');
+const debug = require('debug')('demo');
+const koa = require('koa');
+const IO = require('koa-socket');
+const io = new IO();
 
-var app = koa();
-app.use(function *(next){
+//配置文件
+const config = require('./config/config');
+
+const app = koa();
+io.attach(app);
+
+app.use(function*(next) {
     //config 注入中间件，方便调用配置信息
-    if(!this.config){
+    if (!this.config) {
         this.config = config;
     }
     yield next;
 });
 
 //log记录
-var Logger = require('mini-logger');
-var logger = Logger({
+const Logger = require('mini-logger');
+const logger = Logger({
     dir: config.logDir,
     format: 'YYYY-MM-DD-[{category}][.log]'
 });
@@ -22,13 +27,13 @@ var logger = Logger({
 //router use : this.logger.error(new Error(''))
 app.context.logger = logger;
 
-var onerror = require('koa-onerror');
+const onerror = require('koa-onerror');
 onerror(app);
 
 //xtemplate对koa的适配
-var xtplApp = require('xtpl/lib/koa');
+const xtplApp = require('xtpl/lib/koa');
 //xtemplate模板渲染
-xtplApp(app,{
+xtplApp(app, {
     //配置模板目录
     views: config.viewDir
 });
@@ -36,32 +41,43 @@ xtplApp(app,{
 
 
 
-var session = require('koa-session');
+const session = require('koa-session');
 app.use(session(app));
 
 
 //post body 解析
-var bodyParser = require('koa-bodyparser');
+const bodyParser = require('koa-bodyparser');
 app.use(bodyParser());
 //数据校验
-var validator = require('koa-validator');
+const validator = require('koa-validator');
 app.use(validator());
 
 //静态文件cache
-var staticCache = require('koa-static-cache');
+const staticCache = require('koa-static-cache');
 var staticDir = config.staticDir;
-app.use(staticCache(staticDir+'/js'));
-app.use(staticCache(staticDir+'/css'));
+app.use(staticCache(staticDir + '/js'));
+app.use(staticCache(staticDir + '/css'));
 
 
 //应用路由
-var appRouter = require('./router/index');
+const appRouter = require('./router/index');
 var router = appRouter(router);
 app.use(router.routes())
-   .use(router.allowedMethods());
+    .use(router.allowedMethods());
 
 app.listen(config.port);
-console.log('listening on port %s',config.port);
-
+console.log('listening on port %s', config.port);
+//build
+const Build = require('./model/build.js');
+const build = new Build(app._io);
+//socket
+app.io.on('connection', ()=>{
+  console.log('99999');
+  app.io.on('chat message', function(msg){ 
+    build.addTask(msg);
+  });
+});
+app.io.on('build', ()=>{
+  console.log('99999');
+});
 module.exports = app;
-
