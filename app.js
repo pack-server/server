@@ -72,10 +72,17 @@ console.log('listening on port %s', config.port);
 //build
 const Build = require('./model/build.js');
 const build = new Build(app._io);
+//git build
+const Site = require('./model/site.js');
+const site = new Site();
 //socket
 app.io.on('connection', ()=>{
   console.log('已连接');
   app.io.on('chat message', function(msg){ 
+    build.addTask(msg);
+  });
+  app.io.on('gitBuild',function (msg) {
+    site.getCode(msg.data);
     build.addTask(msg);
   });
 });

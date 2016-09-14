@@ -6,7 +6,7 @@ const shell = require('shelljs');
 var tasks = [];
 class build {
   constructor(io) {
-    this.io = io;
+    this.io = io ? io : null;
   }
 
   addTask(msg) {
@@ -20,12 +20,12 @@ class build {
   runTask(task) {
     let self = this;
     console.log("runTask");
-    shell.exec('npm install',{async:false});
+    shell.exec('npm install', { async: false });
     let config = require('../mods/' + task.mod + '/webpack.config.js');
-    self.build(config,task);
+    self.build(config, task);
   }
 
-  build(config,task) {
+  build(config, task) {
     const self = this;
     webpack(config, function() {
       self.io.to(task.id).emit('chat message', task.mod);
