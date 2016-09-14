@@ -10,6 +10,7 @@ const app = koa();
 io.attach(app);
 
 app.use(function*(next) {
+  this;
     //config 注入中间件，方便调用配置信息
     if (!this.config) {
         this.config = config;
@@ -61,7 +62,8 @@ app.use(staticCache(staticDir + '/css'));
 
 //应用路由
 const appRouter = require('./router/index');
-var router = appRouter(router);
+var router = appRouter();
+
 app.use(router.routes())
     .use(router.allowedMethods());
 
@@ -72,12 +74,9 @@ const Build = require('./model/build.js');
 const build = new Build(app._io);
 //socket
 app.io.on('connection', ()=>{
-  console.log('99999');
+  console.log('已连接');
   app.io.on('chat message', function(msg){ 
     build.addTask(msg);
   });
-});
-app.io.on('build', ()=>{
-  console.log('99999');
 });
 module.exports = app;

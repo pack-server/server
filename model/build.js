@@ -1,38 +1,45 @@
 const webpack = require('webpack');
 const path = require('path');
 const _ = require('underscore');
+const shell = require('shelljs');
+
 var tasks = [];
-class build{
+class build {
   constructor(io) {
     this.io = io;
   }
 
-  addTask(msg){
+  addTask(msg) {
     console.log('addTask');
-    tasks.push({id:msg.socket.id,mod:msg.data});
+    tasks.push({ id: msg.socket.id, mod: msg.data });
     if (tasks.length == 1) {
       this.runTask(tasks[0]);
     }
   }
 
-  runTask(task){
+  runTask(task) {
     let self = this;
     console.log("runTask");
-    let config = require('../mods/'+ task.mod +'/webpack.config.js');
-    webpack(config, function () {
-      self.io.to(task.id).emit('chat message',task.mod);
+    let config = require('../mods/' + task.mod + '/webpack.config.js');
+    self.build(config);
+  }
+
+  build(config) {
+    const self = this;
+    webpack(config, function() {
+      self.io.to(task.id).emit('chat message', task.mod);
       self.deleteTask();
     });
   }
 
-  deleteTask(){
+  deleteTask() {
     console.log("deleteTask");
     tasks.shift();
-    if (tasks.length >0) {
+    if (tasks.length > 0) {
       this.runTask(tasks[0]);
     }
   }
-  
+
 }
 
 module.exports = build;
