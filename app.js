@@ -83,6 +83,7 @@ app.io.on('connection', ()=>{
   });
   app.io.on('gitBuild',function (msg) {
     site.getCode(msg.data);
+    msg.data = `${msg.data.site}/${msg.data.user}/${msg.data.pname}`;
     build.addTask(msg);
   });
 });

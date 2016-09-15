@@ -12,8 +12,6 @@ module.exports = {
     if (!mod) {
       mod = 0;
     }
-    console.log(this.params)
     yield this.render('index', { "mod": mod });
-    console.log(this.params);
   }
 }

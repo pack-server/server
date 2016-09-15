@@ -20,7 +20,11 @@ class initCode {
     let str = shell.exec('git branch');
     let reg = new RegExp(data.branch,'g');
     if (reg.test(str.stdout)) {
-      shell.exec(`git checkout ${data.branch}`);
+      let reg = new RegExp('\\*\\s' + data.branch,'g');
+      if (reg.test(str.stdout)) {
+        shell.exec(`git checkout ${data.branch}`);
+      }
+      shell.exec(`git pull origin ${data.branch}`);
     }else{
       shell.exec(`git branch remotes/origin/${data.branch}`);
       shell.exec(`git checkout -b ${data.branch}`);
