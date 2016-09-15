@@ -1,25 +1,31 @@
 const shell = require('shelljs');
 const build = require('./build.js');
+const fs = require('fs');
 
 class initCode {
   getCode(data) {
     shell.cd('mods');
-    shell.mkdir('github');
+
+    fs.existsSync('github/') || shell.mkdir('github');
     shell.cd('github');
     let url = '';
     if (data.site == 'github') {
       url = `git@github.com:${data.user}/${data.pname}.git`;
     }
-    shell.mkdir(data.user);
+    fs.existsSync(data.user + '/') || shell.mkdir(data.user);
     shell.cd(data.user);
-    shell.exec('git clone ' + url);
+    fs.existsSync(data.pname + '/') || shell.exec('git clone ' + url);
     data.branch = data.branch?data.branch:'master';
-    if (data.branch) {
+    shell.cd(data.pname);
+    let str = shell.exec('git branch');
+    let reg = new RegExp(data.branch,'g');
+    if (reg.test(str.stdout)) {
+      shell.exec(`git checkout ${data.branch}`);
+    }else{
       shell.exec(`git branch remotes/origin/${data.branch}`);
       shell.exec(`git checkout -b ${data.branch}`);
-      shell.exec(`git pull origin ${data.branch}`);
     }
-    shell.cd('../../../');
+    shell.cd('../../../../');
   }
 }
 
