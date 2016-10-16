@@ -2,7 +2,7 @@ const debug = require('debug')('demo');
 const koa = require('koa');
 const IO = require('koa-socket');
 const io = new IO();
-
+const multer = require('koa-multer');
 //配置文件
 const config = require('./config/config');
 
@@ -59,7 +59,8 @@ var staticDir = config.staticDir;
 app.use(staticCache(staticDir + '/js'));
 app.use(staticCache(staticDir + '/css'));
 
-
+//文件上传
+app.use(multer({ dest: './uploads/'}));
 //应用路由
 const appRouter = require('./router/index');
 var router = appRouter();
@@ -76,12 +77,12 @@ const build = new Build(app._io);
 const Site = require('./model/site.js');
 const site = new Site();
 //socket
-app.io.on('connection', ()=>{
+app.io.on('connection', function(next){
   console.log('已连接');
   app.io.on('chat message', function(msg){ 
     build.addTask(msg);
   });
-  app.io.on('gitBuild',function (msg) {
+  app.io.on('gitBuild',function(msg) {
     site.getCode(msg.data);
     msg.data = `${msg.data.site}/${msg.data.user}/${msg.data.pname}`;
     build.addTask(msg);

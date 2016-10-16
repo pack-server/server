@@ -1,9 +1,10 @@
 const shell = require('shelljs');
+const shelljs = require('../libs/shell.js');
 const build = require('./build.js');
 const fs = require('fs');
 
 class initCode {
-  getCode(data) {
+  getCode(data){
     shell.cd('mods');
 
     fs.existsSync('github/') || shell.mkdir('github');
@@ -24,7 +25,9 @@ class initCode {
       if (reg.test(str.stdout)) {
         shell.exec(`git checkout ${data.branch}`);
       }
-      shell.exec(`git pull origin ${data.branch}`);
+      console.log(new Date(),'a')
+      shelljs.exec(`git pull origin ${data.branch}`);
+      console.log(new Date(),'c')
     }else{
       shell.exec(`git branch remotes/origin/${data.branch}`);
       shell.exec(`git checkout -b ${data.branch}`);

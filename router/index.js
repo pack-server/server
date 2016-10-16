@@ -6,5 +6,6 @@ module.exports = function(){
     router.get('/build',controller.build);
     router.get('/cloud/:site/:user/:pname',controller.site);
     router.get('/cloud/:site/:user/:pname/:branch',controller.site);
+    router.post('/upload', controller.upload);
     return router;
 };
