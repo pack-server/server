@@ -26,6 +26,9 @@ class build {
   runTask(task) {
     let self = this;
     console.log("runTask");
+    console.log(task)
+    shell.cd('./mods');
+    shell.cd('./' + task.mod)
     shell.exec('npm install', { async: false });
     let config = require('../mods/' + task.mod + '/webpack.config.js');
     self.build(config, task);
