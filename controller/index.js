@@ -1,4 +1,6 @@
 const Site = require('../model/site.js');
+const fs = require('fs');
+const path = require('path');
 const site = new Site();
 module.exports = {
   index: function*() {
@@ -13,5 +15,8 @@ module.exports = {
       mod = 0;
     }
     yield this.render('index', { "mod": mod });
+  },
+  upload: function*(next) {
+    console.dir(this.req.files)
   }
 }
